@@ -20,13 +20,11 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["/"],
       "@/app/*": ["./src/*"],
       "@/app/ui/*": ["./src/ui/*"],
       "@/app/lib/*": ["./src/lib/*"],
       "@/app/components/*": ["./src/components/*"],
       "@/app/hooks/*": ["./src/hooks/*"],
-      "@/app/seed/*": ["./src/seed/*"],
     }
   },
   "include": [
