@@ -1,9 +1,10 @@
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
-import { z } from 'zod';
-import { sql } from '@vercel/postgres';
-import type { User } from '@/app/lib/definitions';
 import bcrypt from 'bcrypt';
+import { sql } from '@vercel/postgres';
+import { z } from 'zod';
+import type { User } from '@/app/lib/definitions';
+import { authConfig } from './auth.config';
 
 async function getUser(email: string): Promise<User | undefined> {
   try {
@@ -16,22 +17,7 @@ async function getUser(email: string): Promise<User | undefined> {
 }
 
 export const { auth, signIn, signOut } = NextAuth({
-  pages: {
-    signIn: '/login',
-  },
-  callbacks: {
-    authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth?.user;
-      const isOnDashboard = nextUrl.pathname.startsWith('/dashboard');
-      if (isOnDashboard) {
-        if (isLoggedIn) return true;
-        return false; // Redirect unauthenticated users to login page
-      } else if (isLoggedIn) {
-        return Response.redirect(new URL('/dashboard', nextUrl));
-      }
-      return true;
-    },
-  },
+  ...authConfig,
   providers: [
     Credentials({
       async authorize(credentials) {
@@ -41,14 +27,15 @@ export const { auth, signIn, signOut } = NextAuth({
 
         if (parsedCredentials.success) {
           const { email, password } = parsedCredentials.data;
+
           const user = await getUser(email);
-          console.log('user:', user);
           if (!user) return null;
 
           const passwordsMatch = await bcrypt.compare(password, user.password);
           if (passwordsMatch) return user;
         }
 
+        console.log('Invalid credentials');
         return null;
       },
     }),

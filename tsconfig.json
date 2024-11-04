@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -18,8 +18,15 @@
         "name": "next"
       }
     ],
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["/"],
+      "@/app/*": ["./src/*"],
+      "@/app/ui/*": ["./src/ui/*"],
+      "@/app/lib/*": ["./src/lib/*"],
+      "@/app/components/*": ["./src/components/*"],
+      "@/app/hooks/*": ["./src/hooks/*"],
+      "@/app/seed/*": ["./src/seed/*"],
     }
   },
   "include": [
@@ -27,7 +34,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "app/lib/placeholder-data.js",
+    "app/lib/placeholder-data.ts",
     "scripts/seed.js"
   ],
   "exclude": ["node_modules"]
